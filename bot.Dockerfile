@@ -7,6 +7,6 @@ RUN pip install -r requirements.txt
 
 COPY bot bot
 
-CMD python bot/main.py\
+CMD python -u bot/main.py\
     --api-token $(cat ${BOT_TELEGRAM_TOKEN_FILE})\
     --redis-url ${BOT_REDIS_URL}

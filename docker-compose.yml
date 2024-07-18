@@ -14,6 +14,19 @@ services:
       redis:
         condition: service_started
         restart: true
+  cbr-puller:
+    build:
+      context: .
+      dockerfile: ./cbr_puller.Dockerfile
+    environment:
+      CBR_PULLER_REDIS_URL: redis://redis:6379
+      CBR_PULLER_RATES_URL: https://cbr.ru/scripts/XML_daily.asp
+    networks:
+      - redis-contour
+    depends_on:
+      redis:
+        condition: service_started
+        restart: true
   redis:
     image: redis:7.2.5-alpine
     volumes:
