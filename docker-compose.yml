@@ -1,0 +1,32 @@
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: ./bot.Dockerfile
+    environment:
+      BOT_REDIS_URL: redis://redis:6379
+      BOT_TELEGRAM_TOKEN_FILE: /run/secrets/telegram_token
+    networks:
+      - redis-contour
+    secrets:
+      - telegram_token
+    depends_on:
+      redis:
+        condition: service_started
+        restart: true
+  redis:
+    image: redis:7.2.5-alpine
+    volumes:
+      - redis-data:/data:rw
+    restart: unless-stopped
+    networks:
+      - redis-contour
+networks:
+  redis-contour:
+    driver: bridge
+secrets:
+  telegram_token:
+    file: ./secrets/telegram_token.secret
+volumes:
+  redis-data:
+    name: "redis-data"
